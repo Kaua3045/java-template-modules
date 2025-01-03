@@ -1,4 +1,4 @@
-# Ecommerce
+# Java Template Modules
 
 ## Ferramentas utilizadas
 ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=java&logoColor=white)
@@ -43,7 +43,7 @@ Breve resumo sobre o projeto
 ## Requisitos para rodar o projeto
 
 1. Docker e docker-compose
-2. Java e JDK 17
+2. Java e JDK 21
 
 ## Instruções para executar o projeto
 
