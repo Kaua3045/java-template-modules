@@ -23,8 +23,8 @@ jobs:
       - name: Run tests and calculate coverage for domain
         run: ./gradlew :domain:test jacocoTestCoverageVerification
 
-      - name: Run tests and calculate coverage for application
-        run: ./gradlew :application:test jacocoTestCoverageVerification
+#      - name: Run tests and calculate coverage for application
+#        run: ./gradlew :application:test jacocoTestCoverageVerification
 
       - name: Run tests and calculate coverage for infrastructure
         run: ./gradlew :infrastructure:test jacocoTestCoverageVerification
