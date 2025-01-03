@@ -2,7 +2,7 @@ package com.kaua.template.domain;
 
 import com.kaua.template.domain.events.DomainEvent;
 import com.kaua.template.domain.events.DomainEventPublisher;
-import com.kaua.template.domain.utils.IdUtils;
+import com.kaua.template.domain.utils.IdentifierUtils;
 import com.kaua.template.domain.utils.InstantUtils;
 import com.kaua.template.domain.validation.ValidationHandler;
 import org.junit.jupiter.api.Assertions;
@@ -40,7 +40,7 @@ public class EntityTest extends UnitTest {
         Assertions.assertEquals(entity1.getClass(), entity2.getClass());
         Assertions.assertEquals(entity1, entity1);
         Assertions.assertNotEquals(entity1, entity3);
-        Assertions.assertNotEquals(entity1.hashCode(), entity2.hashCode());
+        Assertions.assertEquals(entity1.hashCode(), entity2.hashCode());
         Assertions.assertNotEquals(entity1.hashCode(), entity3.hashCode());
         Assertions.assertFalse(entity1.equals(null));
         Assertions.assertFalse(entity1.equals(new Object()));
@@ -133,6 +133,16 @@ public class EntityTest extends UnitTest {
         Assertions.assertEquals(1, aggregateRoot.getVersion());
     }
 
+    @Test
+    void testEntityIncrementVersion() {
+        SampleIdentifier sampleId = new SampleIdentifier(UUID.randomUUID().toString());
+        Entity<SampleIdentifier> entity = createEntity(sampleId);
+
+        Assertions.assertEquals(0, entity.getVersion());
+        entity.incrementVersion();
+        Assertions.assertEquals(1, entity.getVersion());
+    }
+
     private Entity<SampleIdentifier> createEntity(SampleIdentifier id) {
         return new Entity<>(id, 0, Collections.emptyList()) {
             @Override
@@ -142,16 +152,7 @@ public class EntityTest extends UnitTest {
         };
     }
 
-    static class SampleIdentifier extends Identifier {
-        private final String value;
-
-        public SampleIdentifier(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
+    record SampleIdentifier(String value) implements Identifier<String> {
     }
 
     private record SampleEntityEvent(
@@ -159,12 +160,12 @@ public class EntityTest extends UnitTest {
             long aggregateVersion, String source, String traceId) implements DomainEvent {
 
         public SampleEntityEvent(final String id) {
-            this(id, IdUtils.generateIdWithoutHyphen(),
+            this(id, IdentifierUtils.generateNewIdWithoutHyphen(),
                     "SampleEntityEvent",
                     InstantUtils.now(),
                     1,
                     "SampleEntityService",
-                    IdUtils.generateIdWithoutHyphen());
+                    IdentifierUtils.generateNewIdWithoutHyphen());
         }
     }
 

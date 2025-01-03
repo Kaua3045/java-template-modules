@@ -9,7 +9,7 @@ import java.util.*;
 public abstract class Entity<ID extends Identifier> {
 
     private final ID id;
-    private final long version;
+    private long version;
     private final List<DomainEvent> domainEvents;
 
     protected Entity(final ID id, final long version) {
@@ -30,6 +30,10 @@ public abstract class Entity<ID extends Identifier> {
 
     public long getVersion() {
         return version;
+    }
+
+    public void incrementVersion() {
+        this.version++;
     }
 
     public List<DomainEvent> getDomainEvents() {

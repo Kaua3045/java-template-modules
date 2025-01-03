@@ -15,6 +15,4 @@ public interface DomainEvent {
     String source(); // event source (OrderService, PaymentService, etc.) talvez não seja preciso
 
     String traceId(); // trace identifier (UUID) podemos colocar se quiser
-
-    // podemos colocar o email ou name do user que gerou o evento
 }

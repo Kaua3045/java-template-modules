@@ -1,6 +1,6 @@
 package com.kaua.template.domain;
 
-public abstract class Identifier {
+public interface Identifier<T> extends ValueObject {
 
-    public abstract String getValue();
+    T value();
 }

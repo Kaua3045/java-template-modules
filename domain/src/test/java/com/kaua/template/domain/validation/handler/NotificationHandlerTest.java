@@ -11,7 +11,7 @@ import org.mockito.Mockito;
 
 import java.util.List;
 
-public class NotificationHandlerTest extends UnitTest {
+class NotificationHandlerTest extends UnitTest {
 
     @Test
     void givenValidate_whenCallValidate_thenShouldReturnDomainException() {

@@ -4,7 +4,7 @@ import com.kaua.template.domain.UnitTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class InstantUtilsTest extends UnitTest {
+class InstantUtilsTest extends UnitTest {
 
     @Test
     void testCallInstantUtilsNow_thenReturnInstant() {
