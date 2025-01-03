@@ -4,7 +4,7 @@ import com.kaua.template.domain.UnitTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class NoStackTraceExceptionTest extends UnitTest {
+class NoStackTraceExceptionTest extends UnitTest {
 
     @Test
     void testCallNoStacktraceExceptionWithoutCause() {

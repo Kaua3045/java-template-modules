@@ -7,11 +7,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-public class DomainExceptionTest extends UnitTest {
+class DomainExceptionTest extends UnitTest {
 
     @Test
     void givenAValidListOfError_whenCallDomainExceptionWith_ThenReturnDomainException() {
-        var errors = List.of(new Error("Common Error"));
+        var errors = List.of(new Error("sample", "Common Error"));
 
         var domainException = DomainException.with(errors);
 
@@ -31,8 +31,17 @@ public class DomainExceptionTest extends UnitTest {
     void givenAValidListOfErrorAndMessage_whenCallNewDomainException_ThenReturnDomainException() {
         var errors = List.of(new Error("Common Error"));
 
-        var domainException = new DomainException("Common Error", errors);
+        var domainException = DomainException.with("Common Error", errors);
 
         Assertions.assertEquals(errors, domainException.getErrors());
+    }
+
+    @Test
+    void givenAValidMessage_whenCallNewDomainException_ThenReturnDomainException() {
+        var message = "Common Error";
+
+        var domainException = DomainException.with(message);
+
+        Assertions.assertEquals(message, domainException.getMessage());
     }
 }

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ValidationHandlerTest extends UnitTest {
+class ValidationHandlerTest extends UnitTest {
 
     @Test
     void givenAErrors_whenCallHasError_thenShouldReturnTrue() {
