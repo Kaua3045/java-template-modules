@@ -1,0 +1,16 @@
+server:
+  undertow:
+    threads:
+      worker: 10
+      io: 2
+
+spring:
+  datasource: # change this configurations to your database
+    url: jdbc:postgresql://localhost:5434/template
+    username: postgres
+    password: 123456
+  jpa:
+    show-sql: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
