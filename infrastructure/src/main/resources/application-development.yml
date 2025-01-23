@@ -14,3 +14,9 @@ spring:
   flyway:
     enabled: true
     locations: classpath:db/migration
+
+otel:
+  exporter:
+    otlp:
+      endpoint: http://localhost:4318
+      compression: gzip
