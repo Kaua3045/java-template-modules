@@ -4,11 +4,12 @@ on:
   push:
     branches:
       - feature/*
-      - refactor/*
-      - hotfix/*
       - bugfix/*
-      - release/*
+      - hotfix/*
+      - refactor/*
       - fix/*
+      - docs/*
+      - release/*
   workflow_dispatch:
 
 jobs:
