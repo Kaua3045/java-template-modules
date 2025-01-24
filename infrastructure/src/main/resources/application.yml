@@ -53,6 +53,9 @@ management:
     sampling:
       probability: 1.0
   metrics:
+    tags:
+      application: ${application.name:template}
+      instance: ${application.instance:template-01}
     export:
       otlp:
         step: 15s
