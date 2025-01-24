@@ -1,3 +1,7 @@
+application:
+  name: template
+  instance: template-01
+
 server:
   undertow:
     threads:
@@ -14,3 +18,9 @@ spring:
   flyway:
     enabled: true
     locations: classpath:db/migration
+
+otel:
+  exporter:
+    otlp:
+      endpoint: http://localhost:4318
+      compression: gzip

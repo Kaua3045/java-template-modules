@@ -14,11 +14,18 @@ bootJar {
     destinationDirectory.set(file("${rootProject.layout.buildDirectory.get()}/libs"))
 }
 
+springBoot {
+    buildInfo {
+        properties {
+            name = 'java-template'
+        }
+    }
+}
+
 repositories {
     mavenCentral()
 }
 
-// for tracing, logging, and monitoring use this example: https://github.com/devfullcycle/mba-observabilidade
 dependencies {
     implementation(project(":application"))
     implementation(project(":domain"))
@@ -27,6 +34,17 @@ dependencies {
         exclude module: 'spring-boot-starter-tomcat'
     }
     implementation 'org.springframework.boot:spring-boot-starter-undertow'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    implementation 'io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter'
+
+    implementation 'io.micrometer:micrometer-tracing-bridge-otel'
+    runtimeOnly 'io.micrometer:micrometer-registry-otlp'
+    implementation 'io.opentelemetry:opentelemetry-exporter-otlp'
+    implementation 'io.opentelemetry:opentelemetry-sdk-testing'
+
+    implementation 'ch.qos.logback:logback-core:1.5.15'
+    implementation 'ch.qos.logback:logback-classic:1.5.15'
 
     implementation 'com.fasterxml.jackson.module:jackson-module-blackbird'
 
@@ -37,6 +55,12 @@ dependencies {
     testRuntimeOnly 'com.h2database:h2'
 
     testImplementation(project(path: ':domain', configuration: 'testClasses'))
+}
+
+dependencyManagement {
+    imports {
+        mavenBom("io.opentelemetry.instrumentation:opentelemetry-instrumentation-bom:2.11.0")
+    }
 }
 
 flyway { // Flyway configuration change this to match your database
