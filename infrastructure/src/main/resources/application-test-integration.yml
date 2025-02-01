@@ -1,3 +1,7 @@
+redis:
+  host: ${redis.hosts:localhost}
+  port: ${redis.ports:6390}
+
 spring:
   datasource:
     driver-class-name: org.h2.Driver

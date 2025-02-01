@@ -1,3 +1,11 @@
+application:
+  otel:
+    memory-exporter: false
+
+idempotency-key:
+  storage:
+    type: in-memory
+
 logging:
   level:
     ROOT: WARN
@@ -17,6 +25,9 @@ server:
       io: 4
 
 spring:
+  threads:
+    virtual:
+      enabled: true
   flyway:
     enabled: false
   datasource: # change this to your database, postgresql, mysql or other
@@ -44,6 +55,11 @@ spring:
           batch_size: 10
         order_inserts: true
         order_updates: true
+  data:
+    redis:
+      database: 0
+      host: ${redis.host}
+      port: ${redis.port}
 
 # expondo rotas: /actuator/<health, info, metrics>
 management:

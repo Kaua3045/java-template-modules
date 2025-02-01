@@ -1,6 +1,7 @@
 package com.kaua.template.infrastructure.configurations.interceptors;
 
 import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.context.Context;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -30,7 +31,7 @@ public class RequestMdcInterceptor implements HandlerInterceptor {
             @NonNull final HttpServletResponse response,
             @NonNull final Object handler
     ) {
-        final var aCurrentSpan = Span.current();
+        final var aCurrentSpan = Span.fromContext(Context.current());
 
         MDC.put("appName", buildProperties.getName());
         MDC.put("appVersion", buildProperties.getVersion());
@@ -51,15 +52,5 @@ public class RequestMdcInterceptor implements HandlerInterceptor {
         log.debug("Request: {}", MDC.getCopyOfContextMap());
 
         return true;
-    }
-
-    @Override
-    public void afterCompletion(
-            @NonNull final HttpServletRequest request,
-            @NonNull final HttpServletResponse response,
-            @NonNull final Object handler,
-            final Exception ex
-    ) {
-        MDC.clear();
     }
 }

@@ -8,15 +8,15 @@ import io.opentelemetry.sdk.resources.Resource;
 import io.opentelemetry.sdk.testing.exporter.InMemorySpanExporter;
 import io.opentelemetry.sdk.trace.SdkTracerProvider;
 import io.opentelemetry.sdk.trace.export.SimpleSpanProcessor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 @Configuration(proxyBeanMethods = false)
 public class OtelConfig {
 
-    @Profile("test-integration")
     @Bean
+    @ConditionalOnProperty(value = "application.otel.memory-exporter", havingValue = "true")
     public OpenTelemetrySdk openTelemetrySdk() {
         final var aInMemorySpanExporter = InMemorySpanExporter.create();
 

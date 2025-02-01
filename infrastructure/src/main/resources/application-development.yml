@@ -2,6 +2,10 @@ application:
   name: template
   instance: template-01
 
+redis:
+  host: localhost
+  port: 6379
+
 server:
   undertow:
     threads:
