@@ -62,8 +62,6 @@ public class IdempotencyKeyFilter extends OncePerRequestFilter {
                     span.setAttribute("http.query", request.getQueryString());
                     span.setAttribute("http.remote_address", request.getRemoteAddr());
                     span.setAttribute("http.user_agent", request.getHeader("User-Agent"));
-//                    MDC.put("traceId", span.getSpanContext().getTraceId());
-//                    MDC.put("spanId", span.getSpanContext().getSpanId());
 
                     try {
                         final var aHandlerMethod = getHandlerMethod(request);
@@ -134,8 +132,6 @@ public class IdempotencyKeyFilter extends OncePerRequestFilter {
                         }
                     } catch (final Exception e) {
                         resolver.resolveException(request, response, null, e);
-                    } finally {
-//                        MDC.clear();
                     }
                 });
     }
