@@ -6,6 +6,7 @@ import com.kaua.template.domain.exceptions.InternalErrorException;
 import com.kaua.template.domain.exceptions.NotFoundException;
 import com.kaua.template.domain.exceptions.ValidationException;
 import com.kaua.template.domain.utils.InstantUtils;
+import com.kaua.template.infrastructure.exceptions.IdempotencyKeyUnsupportedMethodException;
 import com.kaua.template.infrastructure.utils.ApiError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +45,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleNotFoundException(final NotFoundException ex) {
         log.debug("Handling not found exception: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ApiError.from(ex.getMessage(), InstantUtils.now()));
+    }
+
+    @ExceptionHandler(IdempotencyKeyUnsupportedMethodException.class)
+    public ResponseEntity<ApiError> handleIdempotencyKeyUnsupportedMethodException(final IdempotencyKeyUnsupportedMethodException ex) {
+        log.debug("Handling idempotency key unsupported method exception: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
                 .body(ApiError.from(ex.getMessage(), InstantUtils.now()));
     }
 
