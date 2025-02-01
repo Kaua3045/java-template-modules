@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerExceptionResolver;
@@ -153,7 +154,7 @@ public class IdempotencyKeyFilter extends OncePerRequestFilter {
 
     private boolean isIdempotencyKeyAnnotated(final HandlerMethod handlerMethod) {
         Method method = handlerMethod.getMethod();
-        return method.isAnnotationPresent(IdempotencyKey.class);
+        return method.isAnnotationPresent(IdempotencyKey.class) && handlerMethod.getBeanType().isAnnotationPresent(RestController.class);
     }
 
     private IdempotencyKey getIdempotencyKeyValues(final HandlerMethod handlerMethod) {
