@@ -27,6 +27,8 @@ Breve resumo sobre o projeto
 - [Instruções para executar o projeto](#instruções-para-executar-o-projeto)
 - [Contribua com o projeto](#contribuindo-com-o-projeto)
 - [Changelog](#changelog)
+- [Observabilidade](/doc/observability.md)
+- [Idempotência](/doc/idempotency-key.md)
 
 ## Arquitetura
 

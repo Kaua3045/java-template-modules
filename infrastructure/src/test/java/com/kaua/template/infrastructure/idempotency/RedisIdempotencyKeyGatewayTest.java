@@ -280,6 +280,27 @@ class RedisIdempotencyKeyGatewayTest extends AbstractCacheConfig implements Obse
         assertSpanCreated(IDEMPOTENCY_KEY_SAVE);
     }
 
+    @Test
+    void testSaveIdempotencyKeyWithBodyButWithoutOtherParams() {
+        final var aIdempotencyKey = IdentifierUtils.generateNewIdWithoutHyphen();
+        final var aBody = new IdempotencyKeyBodyTest("test");
+
+        Assertions.assertTrue(this.idempotencyKeyGateway.find(aIdempotencyKey).isEmpty());
+
+        this.idempotencyKeyGateway.save(
+                aIdempotencyKey,
+                new IdempotencyKeyInput(aBody),
+                1,
+                TimeUnit.HOURS
+        );
+
+        final var aResult = this.idempotencyKeyGateway.find(aIdempotencyKey).get();
+
+        Assertions.assertNotNull(aResult.body());
+        Assertions.assertEquals(0, aResult.statusCode());
+        Assertions.assertEquals(0, aResult.headers().size());
+    }
+
     @Override
     public InMemorySpanExporter getSpanExporter() {
         return spanExporter;

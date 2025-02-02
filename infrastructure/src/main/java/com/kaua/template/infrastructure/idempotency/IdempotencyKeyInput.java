@@ -19,6 +19,10 @@ public record IdempotencyKeyInput(int statusCode, Object body, Map<String, Strin
         this.headers = headers;
     }
 
+    public IdempotencyKeyInput(final Object body) {
+        this(0, body, Map.of());
+    }
+
     @Override
     public String toString() {
         return "IdempotencyKeyInput(" +
