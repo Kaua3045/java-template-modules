@@ -1,4 +1,12 @@
-# 📌 Introdução
+# 📌 Observabilidade indices
+- [📌 Introdução](#-introdução)
+- [📌 Padrão de Nomeação dos Spans](#-padrão-de-nomeação-dos-spans)
+- [📌 Como Implementar Spans](#-como-implementar-spans)
+- [📌 Documentação de Spans](#-documentação-de-spans)
+  - [📄 Exemplo de Documentação para `idempotency.save`](#-exemplo-de-documentação-para-idempotencysave)
+- [📌 Onde Documentar](#-onde-documentar)
+
+## 📌 Introdução
 
 A observabilidade é essencial para entender o comportamento 
 dos microserviços, detectar falhas rapidamente e 
