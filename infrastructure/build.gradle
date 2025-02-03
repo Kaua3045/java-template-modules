@@ -53,6 +53,8 @@ dependencies {
     implementation 'org.flywaydb:flyway-core'
 //    implementation 'org.postgresql:postgresql' change to match your database driver
 
+    implementation 'org.owasp.encoder:encoder:1.2.3'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.springframework.boot:spring-boot-testcontainers'

@@ -1,5 +1,6 @@
 package com.kaua.template.infrastructure.idempotency;
 
+import com.kaua.template.infrastructure.configurations.xss.XSSRequestWrapper;
 import com.kaua.template.infrastructure.exceptions.IdempotencyKeyRequiredException;
 import com.kaua.template.infrastructure.exceptions.IdempotencyKeyUnsupportedMethodException;
 import com.kaua.template.infrastructure.idempotency.gateways.IdempotencyKeyGateway;
@@ -54,6 +55,7 @@ public class IdempotencyKeyFilter extends OncePerRequestFilter {
             @NonNull final FilterChain filterChain
     ) {
         log.debug("Processing the idempotency key filter");
+        XSSRequestWrapper sanitizedRequest = new XSSRequestWrapper(request);
 
         this.observationHelper.observation(
                 "http.filter.idempotency_key_filter",
@@ -65,14 +67,14 @@ public class IdempotencyKeyFilter extends OncePerRequestFilter {
                     span.setAttribute("http.user_agent", request.getHeader("User-Agent"));
 
                     try {
-                        final var aHandlerMethod = getHandlerMethod(request);
+                        final var aHandlerMethod = getHandlerMethod(sanitizedRequest);
 
                         if (aHandlerMethod != null && isIdempotencyKeyAnnotated(aHandlerMethod)) {
-                            if (!isSupportedMethod(request)) {
-                                throw new IdempotencyKeyUnsupportedMethodException(request.getMethod());
+                            if (!isSupportedMethod(sanitizedRequest)) {
+                                throw new IdempotencyKeyUnsupportedMethodException(sanitizedRequest.getMethod());
                             }
 
-                            final var aIdempotencyKey = request.getHeader(IdempotencyKey.IDEMPOTENCY_KEY_HEADER);
+                            final var aIdempotencyKey = sanitizedRequest.getHeader(IdempotencyKey.IDEMPOTENCY_KEY_HEADER);
 
                             if (!StringUtils.hasText(aIdempotencyKey)) {
                                 throw new IdempotencyKeyRequiredException();
@@ -101,7 +103,7 @@ public class IdempotencyKeyFilter extends OncePerRequestFilter {
                             this.idempotencyKeyGateway.save(aIdempotencyKey, aTTL, aTimeUnit);
 
                             final var aResponseWrapper = new ContentCachingResponseWrapper(response);
-                            filterChain.doFilter(request, aResponseWrapper);
+                            filterChain.doFilter(sanitizedRequest, aResponseWrapper);
 
                             final var aBodyArray = aResponseWrapper.getContentAsByteArray();
                             aResponseWrapper.copyBodyToResponse();
@@ -129,10 +131,10 @@ public class IdempotencyKeyFilter extends OncePerRequestFilter {
                             log.debug("Idempotency key not found, saving the response for future requests [key:{}] [ttl:{}] [timeUnit:{}], result: {}",
                                     aIdempotencyKey, aTTL, aTimeUnit, aInput);
                         } else {
-                            filterChain.doFilter(request, response);
+                            filterChain.doFilter(sanitizedRequest, response);
                         }
                     } catch (final Exception e) {
-                        resolver.resolveException(request, response, null, e);
+                        resolver.resolveException(sanitizedRequest, response, null, e);
                     }
                 });
     }

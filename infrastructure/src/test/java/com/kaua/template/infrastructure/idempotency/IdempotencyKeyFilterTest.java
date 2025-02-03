@@ -64,6 +64,24 @@ public class IdempotencyKeyFilterTest {
     }
 
     @Test
+    void givenAValidPostMethodWithValidNonExistsIdempotencyKeyButWithXSS_whenCallEndpoint_thenReturnSuccess() throws Exception {
+        final var aBody = new IdempotencyKeyBodyTest("<script>alert('xss')</script>");
+
+        final var request = MockMvcRequestBuilders.post("/test/idempotency-key-helper/success")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("x-idempotency-key", IdentifierUtils.generateNewIdWithoutHyphen())
+                .content(this.mapper.writeValueAsString(aBody))
+                .with(admin());
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.header().string("Location", "/test/idempotency-key-helper/" + "&lt;script&gt;alert(&#39;xss&#39;)&lt;/script&gt;"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value("&lt;script&gt;alert(&#39;xss&#39;)&lt;/script&gt;"));
+    }
+
+    @Test
     void givenAValidPostMethodWithValidExistsIdempotencyKey_whenCallEndpoint_thenReturnSuccess() throws Exception {
         final var aId = IdentifierUtils.generateNewIdWithoutHyphen();
         final var aKey = IdentifierUtils.generateNewIdWithoutHyphen();
@@ -218,7 +236,7 @@ public class IdempotencyKeyFilterTest {
                 observationHelper
         );
 
-        Mockito.when(aRequestMappingHandlerMapping.getHandler(aRequest))
+        Mockito.when(aRequestMappingHandlerMapping.getHandler(Mockito.any()))
                 .thenThrow(new RuntimeException("test"));
 
         aIdempotencyKeyFilter.doFilterInternal(aRequest, aResponse, aFilterChain);
