@@ -236,7 +236,7 @@ public class IdempotencyKeyFilterTest {
                 observationHelper
         );
 
-        Mockito.when(aRequestMappingHandlerMapping.getHandler(aRequest))
+        Mockito.when(aRequestMappingHandlerMapping.getHandler(Mockito.any()))
                 .thenThrow(new RuntimeException("test"));
 
         aIdempotencyKeyFilter.doFilterInternal(aRequest, aResponse, aFilterChain);
