@@ -1,6 +1,7 @@
 package com.kaua.template.infrastructure.idempotency;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kaua.template.infrastructure.configurations.xss.SanitizeUtils;
 
 import java.io.Serializable;
 
@@ -13,7 +14,7 @@ public class IdempotencyKeyBodyTest implements Serializable {
     }
 
     public IdempotencyKeyBodyTest(final String id) {
-        this.id = id;
+        this.id = SanitizeUtils.sanitize(id);
     }
 
     public String getId() {
