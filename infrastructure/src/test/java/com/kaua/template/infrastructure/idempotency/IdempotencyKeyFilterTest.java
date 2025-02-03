@@ -3,6 +3,7 @@ package com.kaua.template.infrastructure.idempotency;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kaua.template.IntegrationTest;
 import com.kaua.template.domain.utils.IdentifierUtils;
+import com.kaua.template.infrastructure.configurations.SecurityConfig;
 import com.kaua.template.infrastructure.idempotency.gateways.IdempotencyKeyGateway;
 import com.kaua.template.infrastructure.utils.ObservationHelper;
 import jakarta.servlet.FilterChain;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -22,8 +24,11 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.HandlerExecutionChain;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
+import static com.kaua.template.ApiTest.admin;
+
 @IntegrationTest
 @AutoConfigureMockMvc
+@Import(SecurityConfig.class)
 public class IdempotencyKeyFilterTest {
 
     @Autowired
@@ -48,7 +53,8 @@ public class IdempotencyKeyFilterTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("x-idempotency-key", IdentifierUtils.generateNewIdWithoutHyphen())
-                .content(this.mapper.writeValueAsString(aBody));
+                .content(this.mapper.writeValueAsString(aBody))
+                .with(admin());
 
         this.mvc.perform(request)
                 .andDo(MockMvcResultHandlers.print())
@@ -68,7 +74,8 @@ public class IdempotencyKeyFilterTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("x-idempotency-key", aKey)
-                .content(this.mapper.writeValueAsString(aBody));
+                .content(this.mapper.writeValueAsString(aBody))
+                .with(admin());
 
         this.mvc.perform(aFirstRequest)
                 .andDo(MockMvcResultHandlers.print())
@@ -80,7 +87,8 @@ public class IdempotencyKeyFilterTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("x-idempotency-key", aKey)
-                .content(this.mapper.writeValueAsString(aBody));
+                .content(this.mapper.writeValueAsString(aBody))
+                .with(admin());
 
         this.mvc.perform(request)
                 .andDo(MockMvcResultHandlers.print())
@@ -96,7 +104,8 @@ public class IdempotencyKeyFilterTest {
 
         final var request = MockMvcRequestBuilders.get("/test/idempotency-key-helper/" + aId)
                 .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON);
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(admin());
 
         this.mvc.perform(request)
                 .andDo(MockMvcResultHandlers.print())
@@ -114,7 +123,8 @@ public class IdempotencyKeyFilterTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("x-idempotency-key", IdentifierUtils.generateNewIdWithoutHyphen())
-                .content(this.mapper.writeValueAsString(aBody));
+                .content(this.mapper.writeValueAsString(aBody))
+                .with(admin());
 
         this.mvc.perform(request)
                 .andDo(MockMvcResultHandlers.print())
@@ -132,7 +142,8 @@ public class IdempotencyKeyFilterTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("x-idempotency-key", IdentifierUtils.generateNewIdWithoutHyphen())
-                .content(this.mapper.writeValueAsString(aBody));
+                .content(this.mapper.writeValueAsString(aBody))
+                .with(admin());
 
         this.mvc.perform(request)
                 .andDo(MockMvcResultHandlers.print())
@@ -149,7 +160,8 @@ public class IdempotencyKeyFilterTest {
         final var request = MockMvcRequestBuilders.put("/test/idempotency-key-helper/put/" + aId)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(aBody));
+                .content(this.mapper.writeValueAsString(aBody))
+                .with(admin());
 
         this.mvc.perform(request)
                 .andDo(MockMvcResultHandlers.print())
@@ -166,7 +178,8 @@ public class IdempotencyKeyFilterTest {
         final var request = MockMvcRequestBuilders.put("/test/idempotency-key-helper/put/idempotency/" + aId)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(aBody));
+                .content(this.mapper.writeValueAsString(aBody))
+                .with(admin());
 
         this.mvc.perform(request)
                 .andDo(MockMvcResultHandlers.print())
@@ -180,7 +193,8 @@ public class IdempotencyKeyFilterTest {
 
         final var request = MockMvcRequestBuilders.get("/test/idempotency-key-helper/get/" + aId)
                 .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON);
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(admin());
 
         this.mvc.perform(request)
                 .andDo(MockMvcResultHandlers.print())

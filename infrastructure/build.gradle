@@ -36,6 +36,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-undertow'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 
     implementation 'io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter'
 
@@ -53,6 +54,7 @@ dependencies {
 //    implementation 'org.postgresql:postgresql' change to match your database driver
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.springframework.boot:spring-boot-testcontainers'
     testRuntimeOnly 'com.h2database:h2'
 

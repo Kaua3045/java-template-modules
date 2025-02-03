@@ -12,10 +12,12 @@
     </appender>
 
     <appender name="stdout_plain" class="ConsoleAppender">
-        <encoder class="PatternLayoutEncoder"> <!-- https://www.codelord.net/2010/08/27/logging-with-a-context-users-in-logback-and-spring-security/ -->
-            <pattern> <!-- https://github.com/onready/demo-spring-security-logging-pattern -->
-                %d{HH:mm:ss.SSSZZ} [%thread] [%X{traceId}] [%X{spanId}] %-5level %logger{36} - %msg%n
-            </pattern>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder"> <!-- https://www.codelord.net/2010/08/27/logging-with-a-context-users-in-logback-and-spring-security/ -->
+            <layout class="com.kaua.template.infrastructure.configurations.logback.PatternLayoutWithAttributes">
+                <pattern> <!-- https://github.com/onready/demo-spring-security-logging-pattern -->
+                    %d{HH:mm:ss.SSSZZ} [%thread] [%X{traceId}] [%X{spanId}] [%user] %-5level %logger{36} - %msg%n
+                </pattern>
+            </layout>
         </encoder>
     </appender>
 
