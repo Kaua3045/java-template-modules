@@ -1,6 +1,6 @@
 application:
   otel:
-    memory-exporter: false
+    memory-exporter: true
 
 idempotency-key:
   storage:
@@ -12,7 +12,7 @@ logging:
     com.kaua.template: DEBUG
 
 server:
-  port: 8081
+  port: 8080
   servlet:
     context-path: /api
   compression:
@@ -60,47 +60,35 @@ spring:
       database: 0
       host: ${redis.host}
       port: ${redis.port}
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081/api
+          jwk-set-uri: http://localhost:8081/api/.well-known/jwks.json
 
 # expondo rotas: /actuator/<health, info, metrics>
 management:
-  endpoints.web.exposure.include: "*"
-  tracing:
-    enabled: true
-    sampling:
-      probability: 1.0
-  metrics:
-    tags:
-      application: ${application.name:template}
-      instance: ${application.instance:template-01}
-    export:
-      otlp:
-        step: 15s
-    enable-all: true
-    distribution:
-      percentiles-histogram:
-        http:
-          server:
-            requests: true
-      slo[http.server.requests]: "25ms, 50ms, 100ms, 200ms, 400ms, 800ms, 1500ms"
-
-otel: # https://medium.com/@yangli136/how-opentelemetry-is-integrated-with-spring-boot-application-7e309efc0011
-  metrics:
-    enabled: true
-    export:
-      interval: 10s
-  propagation:
-    enabled: true
-  propagators:
-    - b3
-  traces:
-    export:
-      interval: 10s
-  logs:
-    enabled: true
-    export:
-      interval: 10s
-#    exporter: none change to otlp
-  resource:
-    attributes:
-      service:
-        name: template
+  otlp:
+    metrics:
+      export:
+        url: ${opentelemetry.metrics.endpoint}
+        resourceAttributes:
+          service.name: ${application.name}
+          deployment.environment: ${application.environment}
+        step: 30s
+        batchSize: 10000
+      enable-all: true
+      distribution:
+        percentiles-histogram:
+          http:
+            server:
+              requests: true
+        slo[http.server.requests]: "25ms, 50ms, 100ms, 200ms, 400ms, 800ms, 1500ms"
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    prometheus:
+      enabled: true

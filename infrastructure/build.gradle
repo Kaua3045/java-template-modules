@@ -26,24 +26,27 @@ repositories {
     mavenCentral()
 }
 
+var opentelemetryVersion = "1.52.0"
+
 dependencies {
     implementation(project(":application"))
     implementation(project(":domain"))
 
     implementation('org.springframework.boot:spring-boot-starter-web') {
-        exclude module: 'spring-boot-starter-tomcat'
+//        exclude module: 'spring-boot-starter-tomcat'
     }
-    implementation 'org.springframework.boot:spring-boot-starter-undertow'
+//    implementation 'org.springframework.boot:spring-boot-starter-undertow'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 
-    implementation 'io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter'
+    implementation "io.opentelemetry:opentelemetry-api:$opentelemetryVersion"
+    implementation "io.opentelemetry:opentelemetry-sdk:$opentelemetryVersion"
+    implementation "io.opentelemetry:opentelemetry-sdk-testing:$opentelemetryVersion"
 
-    implementation 'io.micrometer:micrometer-tracing-bridge-otel'
-    runtimeOnly 'io.micrometer:micrometer-registry-otlp'
-    implementation 'io.opentelemetry:opentelemetry-exporter-otlp'
-    implementation 'io.opentelemetry:opentelemetry-sdk-testing'
+    implementation "io.micrometer:micrometer-core"
+    implementation "io.micrometer:micrometer-registry-prometheus"
+    implementation "io.micrometer:micrometer-registry-otlp"
 
     implementation 'ch.qos.logback:logback-core:1.5.15'
     implementation 'ch.qos.logback:logback-classic:1.5.15'
@@ -66,12 +69,6 @@ dependencies {
     testImplementation 'org.testcontainers:junit-jupiter'
 }
 
-dependencyManagement {
-    imports {
-        mavenBom("io.opentelemetry.instrumentation:opentelemetry-instrumentation-bom:2.11.0")
-    }
-}
-
 flyway { // Flyway configuration change this to match your database
     url = 'jdbc:postgresql://' + System.getenv('DATABASE_POSTGRESQL_URL') + '/template' ?: 'jdbc:postgresql://localhost:5432/template'
     user = System.getenv('DATABASE_POSTGRESQL_USERNAME') ?: 'postgres'
@@ -83,8 +80,8 @@ jacocoTestReport {
         classDirectories.setFrom(
                 files(classDirectories.files.collect {
                     fileTree(dir: it, exclude: [
-                            'om/kaua/template/infrastructure/configurations/*',
-                            'om/kaua/template/infrastructure/Main.class'
+                            'com/kaua/template/infrastructure/configurations/*',
+                            'com/kaua/template/infrastructure/Main.class'
                     ])
                 })
         )

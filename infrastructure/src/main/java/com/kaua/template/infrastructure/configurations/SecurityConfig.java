@@ -53,35 +53,35 @@ public class SecurityConfig {
                 .build();
     }
 
-    @Bean
-    public JwtDecoder jwtDecoder() {
-        // TODO: Change this to a real public key
-        RSAKeyGenerator rsaKeyGenerator = new RSAKeyGenerator(2048);
-        try {
-            RSAKey rsaKey = rsaKeyGenerator.generate();
-            return NimbusJwtDecoder.withPublicKey(rsaKey.toRSAPublicKey()).build();
-        } catch (JOSEException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Bean
-    public JwtEncoder jwtEncoder() {
-        // TODO: Change this to get real public and private keys
-        RSAKeyGenerator rsaKeyGenerator = new RSAKeyGenerator(2048);
-        RSAKey jwk = null;
-        try {
-            RSAKey rsaKey = rsaKeyGenerator.generate();
-            jwk = new RSAKey.Builder(rsaKey.toRSAPublicKey())
-                    .privateKey(rsaKey.toPrivateKey()).build();
-        } catch (JOSEException e) {
-            throw new RuntimeException(e);
-        }
-
-        var jkws = new ImmutableJWKSet<>(new JWKSet(jwk));
-
-        return new NimbusJwtEncoder(jkws);
-    }
+//    @Bean
+//    public JwtDecoder jwtDecoder() {
+//        // TODO: Change this to a real public key
+//        RSAKeyGenerator rsaKeyGenerator = new RSAKeyGenerator(2048);
+//        try {
+//            RSAKey rsaKey = rsaKeyGenerator.generate();
+//            return NimbusJwtDecoder.withPublicKey(rsaKey.toRSAPublicKey()).build();
+//        } catch (JOSEException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+//
+//    @Bean
+//    public JwtEncoder jwtEncoder() {
+//        // TODO: Change this to get real public and private keys
+//        RSAKeyGenerator rsaKeyGenerator = new RSAKeyGenerator(2048);
+//        RSAKey jwk = null;
+//        try {
+//            RSAKey rsaKey = rsaKeyGenerator.generate();
+//            jwk = new RSAKey.Builder(rsaKey.toRSAPublicKey())
+//                    .privateKey(rsaKey.toPrivateKey()).build();
+//        } catch (JOSEException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        var jkws = new ImmutableJWKSet<>(new JWKSet(jwk));
+//
+//        return new NimbusJwtEncoder(jkws);
+//    }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

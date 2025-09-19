@@ -2,10 +2,10 @@ package com.kaua.template.infrastructure.idempotency;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kaua.template.IntegrationTest;
+import com.kaua.template.application.wrapper.TracerWrapper;
 import com.kaua.template.domain.utils.IdentifierUtils;
 import com.kaua.template.infrastructure.configurations.SecurityConfig;
 import com.kaua.template.infrastructure.idempotency.gateways.IdempotencyKeyGateway;
-import com.kaua.template.infrastructure.utils.ObservationHelper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -48,7 +48,7 @@ public class IdempotencyKeyFilterTest {
     private IdempotencyKeyGateway idempotencyKeyGateway;
 
     @Autowired
-    private ObservationHelper observationHelper;
+    private TracerWrapper tracerWrapper;
 
     @Test
     void givenAValidPostMethodWithValidNonExistsIdempotencyKey_whenCallEndpoint_thenReturnSuccess() throws Exception {
@@ -240,7 +240,7 @@ public class IdempotencyKeyFilterTest {
                 idempotencyKeyGateway,
                 aRequestMappingHandlerMapping,
                 aHandlerExceptionResolver,
-                observationHelper
+                tracerWrapper
         );
 
         Mockito.when(aRequestMappingHandlerMapping.getHandler(Mockito.any()))
@@ -265,7 +265,7 @@ public class IdempotencyKeyFilterTest {
                 idempotencyKeyGateway,
                 aRequestMappingHandlerMapping,
                 aHandlerExceptionResolver,
-                observationHelper
+                tracerWrapper
         );
 
         Mockito.when(aRequestMappingHandlerMapping.getHandler(aRequest))
@@ -287,7 +287,7 @@ public class IdempotencyKeyFilterTest {
                 idempotencyKeyGateway,
                 aRequestMappingHandlerMapping,
                 aHandlerExceptionResolver,
-                observationHelper
+                tracerWrapper
         );
 
         final var aHandlerExecutionChain = Mockito.mock(HandlerExecutionChain.class);
@@ -314,7 +314,7 @@ public class IdempotencyKeyFilterTest {
                 idempotencyKeyGateway,
                 aRequestMappingHandlerMapping,
                 aHandlerExceptionResolver,
-                observationHelper
+                tracerWrapper
         );
 
         var method = IdempotencyKeyFilter.class.getDeclaredMethod("getHandlerMethod", HttpServletRequest.class);
@@ -340,7 +340,7 @@ public class IdempotencyKeyFilterTest {
                 idempotencyKeyGateway,
                 aRequestMappingHandlerMapping,
                 aHandlerExceptionResolver,
-                observationHelper
+                tracerWrapper
         );
 
         var method = IdempotencyKeyFilter.class.getDeclaredMethod("getHandlerMethod", HttpServletRequest.class);
@@ -415,7 +415,7 @@ public class IdempotencyKeyFilterTest {
                 idempotencyKeyGateway,
                 mock(RequestMappingHandlerMapping.class),
                 mock(HandlerExceptionResolver.class),
-                observationHelper
+                tracerWrapper
         );
         return Boolean.TRUE.equals(ReflectionTestUtils.invokeMethod(filter, "isIdempotencyKeyAnnotated", handlerMethod));
     }

@@ -1,10 +1,10 @@
 package com.kaua.template.infrastructure.idempotency.gateways;
 
+import com.kaua.template.application.wrapper.TracerWrapper;
 import com.kaua.template.infrastructure.configurations.json.Json;
 import com.kaua.template.infrastructure.exceptions.IdempotencyKeyAlreadyExistsException;
 import com.kaua.template.infrastructure.idempotency.IdempotencyKeyDTO;
 import com.kaua.template.infrastructure.idempotency.IdempotencyKeyInput;
-import com.kaua.template.infrastructure.utils.ObservationHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -22,16 +22,16 @@ public class RedisIdempotencyKeyGateway implements IdempotencyKeyGateway {
     private static final Logger log = LoggerFactory.getLogger(RedisIdempotencyKeyGateway.class);
 
     private final RedisTemplate<String, byte[]> redisTemplate;
-    private final ObservationHelper observationHelper;
+    private final TracerWrapper tracerWrapper;
 
-    public RedisIdempotencyKeyGateway(final RedisTemplate<String, byte[]> redisTemplate, ObservationHelper observationHelper) {
+    public RedisIdempotencyKeyGateway(final RedisTemplate<String, byte[]> redisTemplate, TracerWrapper tracerWrapper) {
         this.redisTemplate = Objects.requireNonNull(redisTemplate);
-        this.observationHelper = observationHelper;
+        this.tracerWrapper = tracerWrapper;
     }
 
     @Override
     public void save(final String idempotencyKey, final long ttl, final TimeUnit timeUnit) {
-        this.observationHelper.observation(
+        this.tracerWrapper.trace(
                 IDEMPOTENCY_SPAN_NAME.concat(".save_key"),
                 (span) -> {
                     span.setAttribute("idempotency_key", idempotencyKey);
@@ -60,7 +60,7 @@ public class RedisIdempotencyKeyGateway implements IdempotencyKeyGateway {
 
     @Override
     public void save(final String idempotencyKey, final IdempotencyKeyInput body, final long ttl, final TimeUnit timeUnit) {
-        this.observationHelper.observation(
+        this.tracerWrapper.trace(
                 IDEMPOTENCY_SPAN_NAME.concat(".save_key_with_body"),
                 (span) -> {
                     span.setAttribute("idempotency_key", idempotencyKey);
@@ -96,7 +96,7 @@ public class RedisIdempotencyKeyGateway implements IdempotencyKeyGateway {
 
     @Override
     public Optional<IdempotencyKeyDTO> find(final String idempotencyKey) {
-        return this.observationHelper.observationWithReturn(
+        return this.tracerWrapper.traceWithReturn(
                 IDEMPOTENCY_SPAN_NAME.concat(".find_key"),
                 (span) -> {
                     span.setAttribute("idempotency_key", idempotencyKey);

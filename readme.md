@@ -1,4 +1,4 @@
-# Java Template Modules
+# Plataform de Eventos
 
 ## Ferramentas utilizadas
 ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=java&logoColor=white)
@@ -9,16 +9,16 @@
 
 ## Sobre
 
-Breve resumo sobre o projeto
+Uma plataforma muito parecida com a Sympla. Criar e gerenciar eventos e tickets.
 
 - Porquê decidiu fazer esse projeto?
-    - ....
+  - Decidi fazer esse projeto para aprender mais sobre clean architecture, DDD e SOLID. Além de aprender mais sobre o Spring e o Java. Deploys com k8s, docker e argoCD.
 
 - Quais foram os desafios de implementá-lo?
-    - ...
+  - Foi um desafio muito grande implementar toda a parte de CD, com k8s, docker e argoCD, além disso o projeto é muito complexo, são muitas regras de negócio e validações, o que torna o projeto muito interessante.
 
 - O que eu aprendi com ele?
-    - ...
+  - Aprendi como implementar CD com k8s, docker e argoCD. Além disso aprendi muito sobre tipos de deploy, como configurar um projeto, toda a parte de segurança e boas práticas.
 
 ## Tabela de conteúdos
 
@@ -49,29 +49,34 @@ Breve resumo sobre o projeto
 
 ## Instruções para executar o projeto
 
-1. Baixe a aplicação e instale as dependências:
-```bash
-# Baixando o projeto e acessando o diretorio
-git clone https://github.com/Kaua3045/CHANGE-HERE.git cd change-here
+### 1. Rodando localmente (modo dev)
 
-# Baixando as dependências
-./gradlew dependencies  
+1. Baixe o projeto e instale as dependências:
+```bash
+git clone https://github.com/Kaua3045/java-template-modules.git
+cd java-template-modules
+./gradlew build
 ```
 
-2. Antes de executar a aplicação, você precisa configurar o arquivo .env.example, depois renomeie ele para .env
-
-3. Agora inicie o container do banco de dados:
+2. Configure o ambiente:
 ```bash
-# Execute o container do banco de dados
-docker-compose -f docker-compose-dev.yml up -d
+   cp .env.example .env
 ```
 
-4. Agora inicie a aplicação:
+3. Inicie a aplicação:
 ```bash
-# Iniciando a aplicação
 ./gradlew bootRun
 ```
-5. A url base da aplicação é: *localhost:8080/*
+- URL base: http://localhost:8081/
+
+### Rodando com Docker (sandbox)
+1. Configure o .env como no passo anterior.
+2. Rode os containers:
+```bash
+  docker-compose -f docker/sandbox/observability/docker-compose.yml up -d
+  docker-compose -f docker-compose-dev.yml up -d
+```
+- URL base: http://localhost:8081/api/
 
 ## Contribuindo com o projeto
 

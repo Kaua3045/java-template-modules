@@ -35,9 +35,9 @@ services:
       - "bootstrap.memory_lock=true"
       - "cluster.name=template-observability"
       - "node.name=template-observability01"
-      - "ES_JAVA_OPTS=-Xms256m -Xmx512m"
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
       - "xpack.security.enabled=false"
-#      - "ELASTIC_PASSWORD=elastic"
+    #      - "ELASTIC_PASSWORD=elastic"
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
     ports:
@@ -51,8 +51,8 @@ services:
     container_name: kibana
     environment:
       - "ELASTICSEARCH_URL=http://elasticsearch:9200"
-#      - "ELASTICSEARCH_USERNAME=elastic"
-#      - "ELASTICSEARCH_PASSWORD=elastic"
+    #      - "ELASTICSEARCH_USERNAME=elastic"
+    #      - "ELASTICSEARCH_PASSWORD=elastic"
     ports:
       - "5601:5601"
     depends_on:
@@ -103,4 +103,4 @@ volumes:
 
 networks:
   observability:
-    driver: bridge
+    name: observability

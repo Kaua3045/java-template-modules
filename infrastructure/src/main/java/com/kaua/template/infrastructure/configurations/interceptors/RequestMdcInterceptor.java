@@ -9,10 +9,13 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.lang.NonNull;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @Component
 public class RequestMdcInterceptor implements HandlerInterceptor {
@@ -33,6 +36,8 @@ public class RequestMdcInterceptor implements HandlerInterceptor {
     ) {
         final var aCurrentSpan = Span.fromContext(Context.current());
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         MDC.put("appName", buildProperties.getName());
         MDC.put("appVersion", buildProperties.getVersion());
         MDC.put("appBuildDate", buildProperties.getTime().toString());
@@ -43,11 +48,14 @@ public class RequestMdcInterceptor implements HandlerInterceptor {
         MDC.put("userAgent", request.getHeader("User-Agent"));
         MDC.put("requestUri", request.getRequestURI());
         MDC.put("clientIp", request.getRemoteAddr());
-        if (request.getHeader("b3") != null) {
-            MDC.put("b3", request.getHeader("b3"));
-        } else {
-            MDC.put("b3", " ");
-        }
+
+        final var aTraceparent = Optional.ofNullable(request.getHeader("traceparent"))
+                .orElse(" ");
+        final var aTracestate = Optional.ofNullable(request.getHeader("tracestate"))
+                .orElse(" ");
+
+        MDC.put("traceparent", aTraceparent);
+        MDC.put("tracestate", aTracestate);
 
         log.debug("Request: {}", MDC.getCopyOfContextMap());
 

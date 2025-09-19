@@ -2,6 +2,7 @@ package com.kaua.template;
 
 import io.opentelemetry.api.OpenTelemetry;
 import io.opentelemetry.api.common.AttributeKey;
+import io.opentelemetry.api.trace.Tracer;
 import io.opentelemetry.sdk.OpenTelemetrySdk;
 import io.opentelemetry.sdk.testing.exporter.InMemorySpanExporter;
 import io.opentelemetry.sdk.trace.SdkTracerProvider;
@@ -80,6 +81,11 @@ public interface ObservationTest {
             return OpenTelemetrySdk.builder()
                     .setTracerProvider(tracerProvider)
                     .build();
+        }
+
+        @Bean
+        public Tracer tracer() {
+            return openTelemetry().getTracer("tests");
         }
     }
 }
